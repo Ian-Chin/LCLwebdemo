@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Home", href: "#home" },
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "Blog", href: "#blog" },
   { label: "Testimonials", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
@@ -51,7 +51,7 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          "fixed top-10 left-0 right-0 z-50 transition-all duration-500",
           isScrolled
             ? "bg-surface-950/80 backdrop-blur-xl border-b border-white/[0.06] py-2"
             : "bg-transparent py-4"
@@ -63,9 +63,9 @@ export default function Navbar() {
             <Image
               src="/logo.png"
               alt="LCL Auto Service"
-              width={140}
-              height={48}
-              className="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              width={160}
+              height={55}
+              className="h-[46px] sm:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               priority
             />
           </a>

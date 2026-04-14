@@ -6,33 +6,33 @@ import { useState } from "react";
 
 const images = [
   {
-    src: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80",
-    alt: "Car engine bay service",
+    src: "/gallery/1.jpg",
+    alt: "LCL Auto Service workshop",
     span: "col-span-2 row-span-2",
   },
   {
-    src: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80",
-    alt: "Brake disc replacement",
+    src: "/gallery/2.jpg",
+    alt: "Engine repair service",
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&q=80",
-    alt: "Tyre fitting service",
+    src: "/gallery/3.jpg",
+    alt: "Vehicle maintenance",
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1632823471565-1ecdf5c6da20?w=600&q=80",
-    alt: "Under car repair",
+    src: "/gallery/4.jpg",
+    alt: "Professional car servicing",
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=600&q=80",
-    alt: "Workshop equipment",
+    src: "/gallery/5.jpg",
+    alt: "Workshop team at work",
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?w=600&q=80",
-    alt: "Car detail work",
+    src: "/gallery/6.jpg",
+    alt: "Quality auto care",
     span: "col-span-2",
   },
 ];

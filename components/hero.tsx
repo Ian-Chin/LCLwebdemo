@@ -133,7 +133,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.7 }}
-              className="font-heading text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[0.95] tracking-tight mb-6"
+              className="font-heading text-[2.7rem] sm:text-[3.4rem] lg:text-[3.9rem] xl:text-[4.5rem] font-bold text-white leading-[0.95] tracking-tight mb-6"
             >
               Reliable
               <br />
@@ -147,7 +147,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="text-lg sm:text-xl text-surface-400 max-w-xl mx-auto mb-10 leading-relaxed"
+              className="text-base sm:text-lg text-surface-400 max-w-xl mx-auto mb-10 leading-relaxed"
             >
               From routine servicing to complex repairs, LCL Auto Service
               delivers expert workmanship with honest pricing. Your vehicle

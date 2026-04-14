@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { motion } from "framer-motion";
+import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { useCallback } from "react";
 
 const testimonials = [
   {
@@ -46,52 +48,18 @@ const avatarColors = [
 ];
 
 export default function Testimonials() {
-  const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start", slidesToScroll: 1 },
+    [Autoplay({ delay: 5000, stopOnInteraction: false })]
+  );
 
-  const goTo = (index: number) => {
-    setDirection(index > current ? 1 : -1);
-    setCurrent(index);
-  };
-
-  const next = useCallback(() => {
-    setDirection(1);
-    setCurrent((prev) => (prev + 1) % testimonials.length);
-  }, []);
-
-  const prev = () => {
-    setDirection(-1);
-    setCurrent(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length
-    );
-  };
-
-  useEffect(() => {
-    const timer = setInterval(next, 6000);
-    return () => clearInterval(timer);
-  }, [next]);
-
-  const slideVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 60 : -60,
-      opacity: 0,
-      scale: 0.98,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (dir: number) => ({
-      x: dir < 0 ? 60 : -60,
-      opacity: 0,
-      scale: 0.98,
-    }),
-  };
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <section id="testimonials" className="py-24 sm:py-32 relative">
-      <div className="section-padding">
+    <section id="testimonials" className="py-24 sm:py-32 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-surface-950 via-surface-900/30 to-surface-950" />
+      <div className="section-padding relative">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -110,107 +78,71 @@ export default function Testimonials() {
           </p>
         </motion.div>
 
-        {/* Testimonial Card */}
-        <div className="max-w-3xl mx-auto relative">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={current}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="glass-card p-8 sm:p-12 text-center relative overflow-hidden"
-            >
-              {/* Decorative quote marks */}
-              <div className="absolute top-6 left-8 text-8xl font-serif text-brand-500/[0.06] leading-none select-none">
-                &ldquo;
-              </div>
-              <div className="absolute bottom-6 right-8 text-8xl font-serif text-brand-500/[0.06] leading-none select-none rotate-180">
-                &ldquo;
-              </div>
-
-              {/* Quote icon */}
-              <Quote className="w-10 h-10 text-brand-500/20 mx-auto mb-6" />
-
-              {/* Stars */}
-              <div className="flex items-center justify-center gap-1 mb-6">
-                {Array.from({ length: testimonials[current].rating }).map(
-                  (_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.05, duration: 0.3 }}
-                    >
-                      <Star className="w-5 h-5 text-brand-500 fill-brand-500" />
-                    </motion.div>
-                  )
-                )}
-              </div>
-
-              {/* Text */}
-              <p className="text-lg sm:text-xl text-surface-300 leading-relaxed mb-8 italic">
-                &ldquo;{testimonials[current].text}&rdquo;
-              </p>
-
-              {/* Author */}
-              <div>
+        {/* Carousel */}
+        <div className="relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex -ml-6">
+              {testimonials.map((testimonial, i) => (
                 <div
-                  className={`w-12 h-12 rounded-full bg-gradient-to-br ${avatarColors[current]} flex items-center justify-center mx-auto mb-3`}
-                >
-                  <span className="text-white font-heading font-bold text-lg">
-                    {testimonials[current].name[0]}
-                  </span>
-                </div>
-                <p className="font-heading font-semibold text-white">
-                  {testimonials[current].name}
-                </p>
-                <p className="text-sm text-surface-500">
-                  {testimonials[current].vehicle}
-                </p>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-4 mt-8">
-            <motion.button
-              onClick={prev}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-12 h-12 rounded-xl glass-card flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </motion.button>
-
-            <div className="flex gap-2">
-              {testimonials.map((_, i) => (
-                <button
                   key={i}
-                  onClick={() => goTo(i)}
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    i === current
-                      ? "w-8 bg-brand-500"
-                      : "w-1.5 bg-white/20 hover:bg-white/40"
-                  }`}
-                  aria-label={`Go to testimonial ${i + 1}`}
-                />
+                  className="flex-[0_0_100%] min-w-0 pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_33.333333%]"
+                >
+                  <div className="glass-card p-6 sm:p-8 relative flex flex-col h-full group">
+                    <Quote className="absolute top-4 right-4 w-8 h-8 text-brand-500/[0.08]" />
+                    
+                    {/* Stars */}
+                    <div className="flex items-center gap-1 mb-6 flex-shrink-0">
+                      {Array.from({ length: testimonial.rating }).map((_, j) => (
+                        <Star key={j} className="w-4 h-4 text-brand-500 fill-brand-500" />
+                      ))}
+                    </div>
+
+                    {/* Text */}
+                    <p className="text-surface-300 leading-relaxed mb-8 italic text-sm sm:text-base flex-grow">
+                      &ldquo;{testimonial.text}&rdquo;
+                    </p>
+
+                    {/* Author */}
+                    <div className="flex items-center gap-4 mt-auto flex-shrink-0 border-t border-white/[0.06] pt-4">
+                      <div
+                        className={`w-10 h-10 rounded-full bg-gradient-to-br ${
+                          avatarColors[i % avatarColors.length]
+                        } flex items-center justify-center shrink-0`}
+                      >
+                        <span className="text-white font-heading font-bold text-sm">
+                          {testimonial.name[0]}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="font-heading font-semibold text-white text-sm group-hover:text-brand-400 transition-colors">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-xs text-surface-500">
+                          {testimonial.vehicle}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
-
-            <motion.button
-              onClick={next}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-12 h-12 rounded-xl glass-card flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </motion.button>
           </div>
+
+          {/* Arrow Controls */}
+          <button
+            onClick={scrollPrev}
+            className="absolute top-1/2 -left-3 sm:-left-5 -translate-y-1/2 w-10 h-10 rounded-full glass-card flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all z-10"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={scrollNext}
+            className="absolute top-1/2 -right-3 sm:-right-5 -translate-y-1/2 w-10 h-10 rounded-full glass-card flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all z-10"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </section>

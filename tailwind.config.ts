@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import forms from "@tailwindcss/forms";
 
 const config: Config = {
   content: [
@@ -50,6 +51,7 @@ const config: Config = {
         "pulse-glow": "pulseGlow 2s ease-in-out infinite",
         "float": "float 6s ease-in-out infinite",
         "border-rotate": "borderRotate 4s linear infinite",
+        "marquee": "marquee 40s linear infinite",
       },
       keyframes: {
         fadeUp: {
@@ -84,10 +86,14 @@ const config: Config = {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [forms],
 };
 
 export default config;

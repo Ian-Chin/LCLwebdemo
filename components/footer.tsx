@@ -44,9 +44,9 @@ export default function Footer() {
               <Image
                 src="/logo.png"
                 alt="LCL Auto Service"
-                width={140}
-                height={48}
-                className="h-10 w-auto object-contain"
+                width={160}
+                height={55}
+                className="h-[46px] w-auto object-contain"
               />
             </a>
             <p className="text-sm text-surface-500 leading-relaxed mb-6 max-w-xs">

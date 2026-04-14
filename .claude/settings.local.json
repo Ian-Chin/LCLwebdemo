@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "WebFetch(domain:www.facebook.com)",
+      "WebFetch(domain:m.facebook.com)"
     ]
   }
 }

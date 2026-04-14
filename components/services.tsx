@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useRef, MouseEvent } from "react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Wrench,
   Droplets,
@@ -12,6 +12,9 @@ import {
   Car,
   Settings,
 } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { useCallback } from "react";
 
 const services = [
   {
@@ -19,122 +22,76 @@ const services = [
     title: "General Servicing",
     description:
       "Complete routine maintenance including oil changes, filter replacements, and multi-point inspections to keep your vehicle running smoothly.",
+    image:
+      "https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=600&q=80",
   },
   {
     icon: Settings,
     title: "Engine Repair",
     description:
       "Expert diagnostics and repair for all engine issues. From minor tune-ups to major overhauls, we handle it all with precision.",
+    image:
+      "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&q=80",
   },
   {
     icon: Droplets,
     title: "Oil & Fluid Service",
     description:
       "Premium engine oil changes, transmission fluid, brake fluid, coolant, and power steering fluid replacement using quality products.",
+    image:
+      "/oil_service.png",
   },
   {
     icon: CircleDot,
     title: "Tyre & Alignment",
     description:
       "Tyre sales, fitting, balancing, rotation, and computerised wheel alignment for safer driving and longer tyre lifespan.",
+    image:
+      "https://images.unsplash.com/photo-1578844251758-2f71da64c96f?w=600&q=80",
   },
   {
     icon: Thermometer,
     title: "Aircond Service",
     description:
       "Full air conditioning diagnostics, gas refill, compressor repair, and cooling system maintenance for maximum cabin comfort.",
+    image:
+      "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=600&q=80",
   },
   {
     icon: Battery,
     title: "Battery Replacement",
     description:
       "Battery testing, jump-start service, and quality battery replacements with warranty. We stock batteries for all vehicle makes.",
+    image:
+      "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=600&q=80",
   },
   {
     icon: Gauge,
     title: "Brake System",
     description:
       "Brake pad replacement, disc machining, brake fluid flush, and complete brake system overhaul for your safety on the road.",
+    image:
+      "/brake_service.png",
   },
   {
     icon: Car,
     title: "Suspension & Steering",
     description:
       "Shock absorber replacement, spring repair, steering rack service, and complete suspension system diagnostics and repairs.",
+    image:
+      "https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=600&q=80",
   },
 ];
 
-function SpotlightCard({
-  service,
-  index,
-}: {
-  service: (typeof services)[0];
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const smoothX = useSpring(mouseX, { damping: 20, stiffness: 300 });
-  const smoothY = useSpring(mouseY, { damping: 20, stiffness: 300 });
-
-  const spotlightOpacity = useMotionValue(0);
-  const smoothOpacity = useSpring(spotlightOpacity, { damping: 20, stiffness: 300 });
-
-  const background = useTransform(
-    [smoothX, smoothY],
-    ([x, y]) =>
-      `radial-gradient(300px circle at ${x}px ${y}px, rgba(249,115,22,0.08), transparent 60%)`
-  );
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    mouseX.set(e.clientX - rect.left);
-    mouseY.set(e.clientY - rect.top);
-    spotlightOpacity.set(1);
-  };
-
-  const handleMouseLeave = () => {
-    spotlightOpacity.set(0);
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="group relative glass-card-hover p-6 sm:p-7 overflow-hidden"
-    >
-      {/* Spotlight effect */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background, opacity: smoothOpacity }}
-      />
-
-      {/* Top border gradient on hover */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-500/0 to-transparent group-hover:via-brand-500/50 transition-all duration-700" />
-
-      <div className="relative z-10">
-        <div className="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center mb-5 group-hover:bg-brand-500/20 group-hover:scale-110 transition-all duration-500">
-          <service.icon className="w-6 h-6 text-brand-500" />
-        </div>
-        <h3 className="font-heading text-lg font-semibold text-white mb-2 group-hover:text-brand-400 transition-colors duration-300">
-          {service.title}
-        </h3>
-        <p className="text-sm text-surface-400 leading-relaxed">
-          {service.description}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Services() {
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start", slidesToScroll: 1 },
+    [Autoplay({ delay: 5000, stopOnInteraction: false })]
+  );
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
   return (
     <section id="services" className="py-24 sm:py-32 relative">
       {/* Background accent */}
@@ -162,11 +119,56 @@ export default function Services() {
           </p>
         </motion.div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {services.map((service, i) => (
-            <SpotlightCard key={service.title} service={service} index={i} />
-          ))}
+        {/* Carousel */}
+        <div className="relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex -ml-6">
+              {services.map((service, i) => (
+                <div
+                  key={service.title}
+                  className="flex-[0_0_100%] min-w-0 pl-6 sm:flex-[0_0_50%] lg:flex-[0_0_33.333333%]"
+                >
+                  <div className="bg-surface-900 border border-white/[0.06] rounded-2xl overflow-hidden group hover:border-brand-500/50 transition-colors h-full flex flex-col">
+                    <div className="relative h-48 sm:h-52 overflow-hidden flex-shrink-0">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-surface-950/90 to-transparent" />
+                      <div className="absolute bottom-4 left-4 w-10 h-10 rounded-xl bg-brand-500/20 backdrop-blur-sm flex items-center justify-center">
+                        <service.icon className="w-5 h-5 text-brand-400" />
+                      </div>
+                    </div>
+                    <div className="p-6 flex-grow">
+                      <h3 className="font-heading text-lg font-semibold text-white mb-2 group-hover:text-brand-400 transition-colors duration-300">
+                        {service.title}
+                      </h3>
+                      <p className="text-sm text-surface-400 leading-relaxed">
+                        {service.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Arrow Controls */}
+          <button
+            onClick={scrollPrev}
+            className="absolute top-1/2 -left-3 sm:-left-5 -translate-y-1/2 w-10 h-10 rounded-full glass-card flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all z-10"
+            aria-label="Previous service"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={scrollNext}
+            className="absolute top-1/2 -right-3 sm:-right-5 -translate-y-1/2 w-10 h-10 rounded-full glass-card flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.08] transition-all z-10"
+            aria-label="Next service"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </section>
